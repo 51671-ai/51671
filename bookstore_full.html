@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlueBook Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Prompt',sans-serif;}
+body{background:#eef3ff;}
+header{background:linear-gradient(135deg,#2d6cdf,#1f4ea8);color:white;padding:20px;text-align:center;}
+nav{display:flex;justify-content:center;background:white;box-shadow:0 2px 10px rgba(0,0,0,.1);}
+nav a{padding:15px 20px;text-decoration:none;color:#2d6cdf;font-weight:500;}
+nav a:hover{background:#2d6cdf;color:white;}
+section{padding:40px;display:none;}
+.active{display:block;}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+.card{background:white;border-radius:15px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,.1);}
+.card img{width:100%;height:250px;object-fit:cover;}
+.card-content{padding:15px;}
+.price{color:#1f4ea8;font-weight:bold;margin:10px 0;}
+button{background:#2d6cdf;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;margin-top:5px;}
+button:hover{background:#1f4ea8;}
+.box{background:white;padding:20px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,.1);max-width:500px;margin:auto;}
+input,textarea{width:100%;padding:8px;margin:8px 0;border-radius:8px;border:1px solid #ccc;}
+.center{text-align:center;}
+</style>
+</head>
+<body>
+
+<header>
+<h1>📚 BlueBook Store</h1>
+</header>
+
+<nav>
+<a href="#" onclick="showSection('products')">สินค้า</a>
+<a href="#" onclick="showSection('cart')">ตะกร้า</a>
+<a href="#" onclick="showSection('admin')">หลังบ้าน</a>
+<a href="#" onclick="showSection('login')">เข้าสู่ระบบ</a>
+</nav>
+
+<!-- LOGIN -->
+<section id="login" class="active">
+<div class="box">
+<h2>เข้าสู่ระบบ</h2>
+<input type="text" id="username" placeholder="Username">
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">เข้าสู่ระบบ</button>
+<p id="login-msg"></p>
+</div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+<h2>รายการหนังสือ</h2><br>
+<div class="products" id="product-list"></div>
+</section>
+
+<!-- CART -->
+<section id="cart">
+<h2>ตะกร้าสินค้า</h2><br>
+<div class="box">
+<ul id="cart-items"></ul>
+<h3 id="total"></h3>
+<button onclick="checkout()">ชำระสินค้า</button>
+</div>
+</section>
+
+<!-- PAYMENT -->
+<section id="payment">
+<div class="box">
+<h2>ชำระสินค้า</h2>
+<input type="text" id="customerName" placeholder="ชื่อผู้รับ">
+<input type="text" id="address" placeholder="ที่อยู่จัดส่ง">
+<select id="paymentMethod">
+<option>โอนผ่านธนาคาร</option>
+<option>เก็บเงินปลายทาง</option>
+</select>
+<button onclick="generateBill()">ยืนยันการชำระเงิน</button>
+</div>
+</section>
+
+<!-- BILL -->
+<section id="bill">
+<div class="box center">
+<h2>ใบเสร็จรับเงิน</h2>
+<div id="bill-detail"></div>
+<button onclick="finishOrder()">กลับหน้าสินค้า</button>
+</div>
+</section>
+
+<!-- ADMIN -->
+<section id="admin">
+<div class="box">
+<h2>หลังบ้าน (Admin)</h2>
+<input type="text" id="bookName" placeholder="ชื่อหนังสือ">
+<input type="number" id="bookPrice" placeholder="ราคา">
+<input type="text" id="bookImage" placeholder="ลิงก์รูปภาพ">
+<textarea id="bookDesc" placeholder="รายละเอียด"></textarea>
+<button onclick="addProduct()">เพิ่มสินค้า</button>
+</div>
+</section>
+
+<script>
+let products=[
+{name:"Atomic Habits",price:320,image:"https://images-na.ssl-images-amazon.com/images/I/91bYsX41DVL.jpg",desc:"พัฒนานิสัยเล็ก ๆ"},
+{name:"Rich Dad Poor Dad",price:250,image:"https://images-na.ssl-images-amazon.com/images/I/81bsw6fnUiL.jpg",desc:"แนวคิดการเงิน"},
+{name:"The Psychology of Money",price:290,image:"https://images-na.ssl-images-amazon.com/images/I/71g2ednj0JL.jpg",desc:"จิตวิทยาการเงิน"}
+];
+
+let cart=[];
+let totalPrice=0;
+
+function showSection(id){
+document.querySelectorAll("section").forEach(sec=>sec.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+
+function login(){
+let user=document.getElementById("username").value;
+let pass=document.getElementById("password").value;
+if(user==="admin" && pass==="1234"){
+document.getElementById("login-msg").innerText="เข้าสู่ระบบสำเร็จ";
+showSection("products");
+}else{
+document.getElementById("login-msg").innerText="Username หรือ Password ไม่ถูกต้อง";
+}
+}
+
+function displayProducts(){
+let list=document.getElementById("product-list");
+list.innerHTML="";
+products.forEach((p,i)=>{
+list.innerHTML+=`
+<div class="card">
+<img src="${p.image}">
+<div class="card-content">
+<h3>${p.name}</h3>
+<p>${p.desc}</p>
+<div class="price">${p.price} บาท</div>
+<button onclick="addToCart(${i})">เพิ่มลงตะกร้า</button>
+</div>
+</div>`;
+});
+}
+
+function addToCart(i){
+cart.push(products[i]);
+displayCart();
+}
+
+function displayCart(){
+let list=document.getElementById("cart-items");
+totalPrice=0;
+list.innerHTML="";
+cart.forEach(item=>{
+totalPrice+=Number(item.price);
+list.innerHTML+=`<li>${item.name} - ${item.price} บาท</li>`;
+});
+document.getElementById("total").innerText="ยอดรวม: "+totalPrice+" บาท";
+}
+
+function checkout(){
+if(cart.length===0){
+alert("กรุณาเลือกสินค้าก่อน");
+}else{
+showSection("payment");
+}
+}
+
+function generateBill(){
+let name=document.getElementById("customerName").value;
+let address=document.getElementById("address").value;
+let pay=document.getElementById("paymentMethod").value;
+
+let detail=`<p>ชื่อลูกค้า: ${name}</p>
+<p>ที่อยู่: ${address}</p>
+<p>วิธีชำระเงิน: ${pay}</p>
+<hr>
+<p>รายการสินค้า:</p>`;
+
+cart.forEach(item=>{
+detail+=`<p>${item.name} - ${item.price} บาท</p>`;
+});
+
+detail+=`<hr><h3>ยอดรวมทั้งหมด: ${totalPrice} บาท</h3>`;
+
+document.getElementById("bill-detail").innerHTML=detail;
+showSection("bill");
+}
+
+function finishOrder(){
+cart=[];
+displayCart();
+showSection("products");
+}
+
+function addProduct(){
+let name=document.getElementById("bookName").value;
+let price=document.getElementById("bookPrice").value;
+let image=document.getElementById("bookImage").value;
+let desc=document.getElementById("bookDesc").value;
+if(name && price && image && desc){
+products.push({name,price,image,desc});
+displayProducts();
+alert("เพิ่มสินค้าเรียบร้อย");
+}
+}
+
+displayProducts();
+</script>
+
+</body>
+</html>
