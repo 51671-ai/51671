@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BlueBook Store Premium</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
@@ -38,8 +39,14 @@ cursor:pointer;
 padding:10px 20px;
 }
 
-section{display:none;padding:40px}
-.active{display:block}
+section{
+display:none;
+padding:40px
+}
+
+.active{
+display:block
+}
 
 .products{
 display:grid;
@@ -119,8 +126,8 @@ text-align:center;
 <nav>
 <a onclick="showSection('products')">📖 สินค้า</a>
 <a onclick="showSection('cart')">🛒 ตะกร้า</a>
-<a onclick="showSection('admin')">⚙ หลังบ้าน</a>
 <a onclick="showSection('contact')">📞 ติดต่อ</a>
+<a onclick="showSection('admin')">⚙ หลังบ้าน</a>
 <a onclick="showSection('login')">🔑 Login</a>
 <a onclick="showSection('register')">📝 สมัครสมาชิก</a>
 </nav>
@@ -128,16 +135,19 @@ text-align:center;
 <!-- LOGIN -->
 
 <section id="login" class="active">
+
 <div class="box">
 
 <h2>เข้าสู่ระบบ</h2>
 
 <input type="text" id="username" placeholder="Username">
+
 <input type="password" id="password" placeholder="Password">
 
 <button onclick="login()">เข้าสู่ระบบ</button>
 
 </div>
+
 </section>
 
 <!-- REGISTER -->
@@ -149,14 +159,16 @@ text-align:center;
 <h2>สมัครสมาชิก</h2>
 
 <input type="text" id="regUser" placeholder="Username">
+
 <input type="password" id="regPass" placeholder="Password">
+
 <input type="password" id="regPass2" placeholder="ยืนยัน Password">
 
 <button onclick="register()">สมัครสมาชิก</button>
 
 <br><br>
 
-<button onclick="showSection('login')">กลับหน้า Login</button>
+<button onclick="showSection('login')">ไปหน้า Login</button>
 
 </div>
 
@@ -165,16 +177,23 @@ text-align:center;
 <!-- PRODUCTS -->
 
 <section id="products">
+
 <h2>📚 รายการหนังสือ</h2><br>
+
 <div class="products" id="product-list"></div>
+
 </section>
 
 <!-- DETAIL -->
 
 <section id="detail">
+
 <div class="box" id="detail-box"></div>
+
 <br>
+
 <button onclick="showSection('products')">⬅ กลับ</button>
+
 </section>
 
 <!-- CART -->
@@ -235,13 +254,22 @@ text-align:center;
 
 <h2>📞 ติดต่อร้าน BlueBook</h2>
 
-<p><b>📞 เบอร์โทร:</b> 062-661-3136</p>
+<p><b>📞 โทร:</b> 062-661-3136</p>
 
-<p><b>📧 Gmail:</b> bookblue56@gmail.com</p>
+<p><b>📧 Email:</b> bookblue56@gmail.com</p>
 
-<p><b>📍 ที่อยู่ร้าน:</b><br>
-89/24 ถนนประชาอุทิศ แขวงบางมด  
+<p><b>📍 ที่อยู่:</b></p>
+
+<p>
+89/24 ถนนประชาอุทิศ แขวงบางมด<br>
 เขตทุ่งครุ กรุงเทพมหานคร 10140
+</p>
+
+<br>
+
+<p>
+ร้าน BlueBook จำหน่ายหนังสือด้านพัฒนาตนเอง การเงิน และธุรกิจ
+สามารถสอบถามข้อมูลหรือสั่งซื้อหนังสือได้ตลอดเวลา
 </p>
 
 </div>
@@ -290,19 +318,21 @@ text-align:center;
 
 <script>
 
-let users=[
-{username:"admin",password:"1234"}
-]
-
 let products=[
 
 {name:"Atomic Habits",price:320,stock:10,image:"https://images-na.ssl-images-amazon.com/images/I/91bYsX41DVL.jpg",desc:"พัฒนานิสัยเล็กๆเปลี่ยนชีวิต"},
 
 {name:"Rich Dad Poor Dad",price:250,stock:8,image:"https://images-na.ssl-images-amazon.com/images/I/81bsw6fnUiL.jpg",desc:"แนวคิดการเงิน"},
 
-{name:"The Psychology of Money",price:290,stock:12,image:"https://images-na.ssl-images-amazon.com/images/I/71g2ednj0JL.jpg",desc:"จิตวิทยาการเงิน"}
+{name:"The Psychology of Money",price:290,stock:12,image:"https://images-na.ssl-images-amazon.com/images/I/71g2ednj0JL.jpg",desc:"จิตวิทยาการเงิน"},
+
+{name:"Think and Grow Rich",price:270,stock:9,image:"https://images-na.ssl-images-amazon.com/images/I/71UypkUjStL.jpg",desc:"แนวคิดสู่ความสำเร็จ"},
+
+{name:"Deep Work",price:300,stock:7,image:"https://images-na.ssl-images-amazon.com/images/I/71QKQ9mwV7L.jpg",desc:"เทคนิคการโฟกัสขั้นสูง"}
 
 ];
+
+let users=[{user:"admin",pass:"1234"}]
 
 let cart=[]
 let orders=[]
@@ -325,17 +355,189 @@ displayOrders()
 
 }
 
+function displayProducts(){
+
+let list=document.getElementById("product-list")
+
+if(!list)return
+
+list.innerHTML=""
+
+products.forEach((p,i)=>{
+
+list.innerHTML+=`
+
+<div class="card">
+
+<img src="${p.image}">
+
+<div class="card-content">
+
+<h3>${p.name}</h3>
+
+<p>${p.desc}</p>
+
+<p>สต็อก: ${p.stock}</p>
+
+<div class="price">${p.price} บาท</div>
+
+<button onclick="viewDetail(${i})">ดูรายละเอียด</button>
+<button onclick="addToCart(${i})">เพิ่มลงตะกร้า</button>
+
+</div>
+
+</div>
+
+`
+
+})
+
+}
+
+function viewDetail(i){
+
+let p=products[i]
+
+document.getElementById("detail-box").innerHTML=`
+
+<h2>${p.name}</h2>
+
+<img src="${p.image}" style="width:100%">
+
+<p>${p.desc}</p>
+
+<h3>${p.price} บาท</h3>
+
+<p>สต็อก: ${p.stock}</p>
+
+<button onclick="addToCart(${i})">เพิ่มลงตะกร้า</button>
+
+`
+
+showSection("detail")
+
+}
+
+function addToCart(i){
+
+if(products[i].stock<=0){
+
+alert("สินค้าหมด")
+
+return
+
+}
+
+cart.push(products[i])
+
+products[i].stock--
+
+displayCart()
+
+}
+
+function displayCart(){
+
+let list=document.getElementById("cart-items")
+
+if(!list)return
+
+let total=0
+
+list.innerHTML=""
+
+cart.forEach(item=>{
+
+total+=Number(item.price)
+
+list.innerHTML+=`<li>${item.name} - ${item.price} บาท</li>`
+
+})
+
+document.getElementById("total").innerText="ยอดรวม "+total+" บาท"
+
+}
+
+function confirmPayment(){
+
+if(cart.length===0){
+alert("ยังไม่มีสินค้า")
+return
+}
+
+let method=document.querySelector('input[name="pay"]:checked').value
+
+let date=new Date().toLocaleString()
+
+cart.forEach(item=>{
+
+orders.push({
+
+name:item.name,
+price:item.price,
+pay:method,
+date:date,
+status:"กำลังจัดส่ง"
+
+})
+
+})
+
+alert("สั่งซื้อสำเร็จ")
+
+cart=[]
+
+displayCart()
+
+}
+
+function displayOrders(){
+
+let list=document.getElementById("order-list")
+
+if(!list)return
+
+let total=0
+
+list.innerHTML=""
+
+orders.forEach(o=>{
+
+total+=Number(o.price)
+
+list.innerHTML+=`
+
+<tr>
+
+<td>${o.name}</td>
+<td>${o.price}</td>
+<td>${o.pay}</td>
+<td>${o.date}</td>
+<td>${o.status}</td>
+
+</tr>
+
+`
+
+})
+
+document.getElementById("totalSales").innerText=total
+
+}
+
 function login(){
 
 let user=document.getElementById("username").value
 let pass=document.getElementById("password").value
 
-let found=users.find(u=>u.username===user && u.password===pass)
+let found=users.find(u=>u.user===user && u.pass===pass)
 
 if(found){
 
 isLogin=true
+
 alert("เข้าสู่ระบบสำเร็จ")
+
 showSection("products")
 
 }else{
@@ -362,18 +564,44 @@ alert("Password ไม่ตรงกัน")
 return
 }
 
-let exist=users.find(u=>u.username===user)
+let exist=users.find(u=>u.user===user)
 
 if(exist){
 alert("Username นี้มีแล้ว")
 return
 }
 
-users.push({username:user,password:pass})
+users.push({user:user,pass:pass})
 
 alert("สมัครสมาชิกสำเร็จ")
 
 showSection("login")
+
+}
+
+function addProduct(){
+
+let name=document.getElementById("bookName").value
+let price=document.getElementById("bookPrice").value
+let stock=document.getElementById("bookStock").value
+let desc=document.getElementById("bookDesc").value
+let file=document.getElementById("bookImage").files[0]
+
+let reader=new FileReader()
+
+reader.onload=function(e){
+
+products.push({name,price,stock,image:e.target.result,desc})
+
+displayProducts()
+
+}
+
+if(file){
+
+reader.readAsDataURL(file)
+
+}
 
 }
 
